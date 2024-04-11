@@ -1,15 +1,11 @@
 <script lang="ts">
-    let textAreaContent = 'x = 2\n\ny = x + 1'; // Default content
+    import {parseTextArea} from "./parser";
+
+    let textAreaContent = 'x = 2\n\ny = x + 1'.replace(/\n/g, '<br>');
     let results: Record<string, string | number> = {};
 
-    function parseTextArea() {
-        const lines = textAreaContent.split('\n');
-        lines.forEach(line => {
-            if (line.includes('=')) {
-                const [variable, value] = line.split('=');
-                results[variable.trim()] = value.trim();
-            }
-        });
+    function myParse() {
+        results = parseTextArea(textAreaContent);
     }
 
     function evaluateExpression(expression: string): number {
@@ -39,16 +35,17 @@
     }
 
     // Call the functions when the component is mounted
-    import { onMount } from 'svelte';
+    import {onMount} from 'svelte';
+
     onMount(() => {
-        parseTextArea();
+        myParse()
         executeCalculations();
     });
 </script>
 
-<textarea bind:value={textAreaContent} />
+<div bind:innerHTML={textAreaContent} contenteditable/>
 
-<button on:click={parseTextArea}>Parse</button>
+<button on:click={myParse}>Parse</button>
 <button on:click={executeCalculations}>Calculate</button>
 
 <div>
@@ -58,10 +55,11 @@
 </div>
 
 <style>
-    textarea {
-        width: 100%;
-        height: 100px;
-        font-family: monospace;
-        font-size: 16px;
+    [contenteditable] {
+        padding: 0.5em;
+        margin-bottom: 2em;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        text-align: left;
     }
 </style>
