@@ -1,35 +1,39 @@
 <script lang="ts">
-    import {parseTextArea} from "./parser";
+    import {type CalculatorStatement, type Expression, expressionToString, parseTextArea} from "./parser";
 
     let textAreaContent = 'x = 2\n\ny = x + 1'.replace(/\n/g, '<br>');
-    let results: Record<string, string | number> = {};
+    let results: CalculatorStatement[] = [];
 
     function myParse() {
         results = parseTextArea(textAreaContent);
     }
 
-    function evaluateExpression(expression: string): number {
-        if (!isNaN(Number(expression))) {
-            return Number(expression);
-        } else if (results.hasOwnProperty(expression)) {
-            if (typeof results[expression] === 'number') {
-                return results[expression] as number;
-            } else {
-                return evaluateExpression(results[expression] as string);
-            }
-        } else if (expression.includes('+')) {
-            const parts = expression.split('+').map(part => part.trim());
-            return evaluateExpression(parts[0]) + evaluateExpression(parts[1]);
+    function evaluateExpression(expression: Expression, variables: Record<string, number> = {}): number{
+        if (expression.kind === 'Number') {
+            return expression.value;
+        } else if (expression.kind === 'Variable') {
+            return variables[expression.name] ?? NaN;
+        } else if (expression.kind === 'Sum') {
+            return expression.elements.reduce((sum, expr) => sum + evaluateExpression(expr), 0);
+        } else if (expression.kind === 'Product') {
+            return expression.factors.reduce((product, expr) => product * evaluateExpression(expr), 1);
         }
-        throw new Error(`Invalid expression: ${expression}`);
+        throw new Error(`Invalid expression: ${JSON.stringify(expression)}`);
     }
 
+    const variables: Record<string, number> = {};
+
     function executeCalculations() {
-        for (let variable in results) {
-            if (typeof results[variable] === 'string') {
-                results[variable] = evaluateExpression(results[variable] as string);
+        for (let i = 0; i < results.length; i++) {
+            const statement = results[i];
+            if (Array.isArray(statement)) {
+                const [variable, expression] = statement;
+                const result = evaluateExpression(expression, variables);
+                variables[variable] = result;
+                results[i] = [variable, { kind: 'Number', value: result }];
             } else {
-                results[variable] = results[variable] as number;
+                const result = evaluateExpression(statement, variables);
+                results[i] = { kind: 'Number', value: result };
             }
         }
     }
@@ -49,10 +53,15 @@
 <button on:click={executeCalculations}>Calculate</button>
 
 <div>
-    {#each Object.entries(results) as [variable, value]}
-        <p>{variable}: {value}</p>
+    {#each results as statement}
+        {#if Array.isArray(statement)}
+            <p>{statement[0]}: {expressionToString(statement[1])}</p>
+        {:else}
+            <p>{expressionToString(statement)}</p>
+        {/if}
     {/each}
 </div>
+
 
 <style>
     [contenteditable] {
