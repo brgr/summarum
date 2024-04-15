@@ -1,67 +1,47 @@
 <script lang="ts">
-    import {type CalculatorStatement, type Expression, expressionToString, parseTextArea} from "./parser";
+    import {type CalculatorStatement, expressionToString, parseTextArea} from "./parser";
+    import {onMount} from 'svelte';
+    import {type CalculatorResult, executeCalculations} from "./eval";
 
     let textAreaContent = 'x = 2\n\ny = x + 1'.replace(/\n/g, '<br>');
-    let results: CalculatorStatement[] = [];
+    let statements: CalculatorStatement[] = [];
+    let results: CalculatorResult[] = [];
 
     function myParse() {
-        results = parseTextArea(textAreaContent);
+        statements = parseTextArea(textAreaContent);
     }
 
-    function evaluateExpression(expression: Expression, variables: Record<string, number> = {}): number{
-        if (expression.kind === 'Number') {
-            return expression.value;
-        } else if (expression.kind === 'Variable') {
-            return variables[expression.name] ?? NaN;
-        } else if (expression.kind === 'Sum') {
-            return expression.elements.reduce((sum, expr) => sum + evaluateExpression(expr), 0);
-        } else if (expression.kind === 'Product') {
-            return expression.factors.reduce((product, expr) => product * evaluateExpression(expr), 1);
-        }
-        throw new Error(`Invalid expression: ${JSON.stringify(expression)}`);
+    let variables: Record<string, number> = {};
+
+    function myCalculate() {
+        results = executeCalculations(statements, variables);
     }
-
-    const variables: Record<string, number> = {};
-
-    function executeCalculations() {
-        for (let i = 0; i < results.length; i++) {
-            const statement = results[i];
-            if (Array.isArray(statement)) {
-                const [variable, expression] = statement;
-                const result = evaluateExpression(expression, variables);
-                variables[variable] = result;
-                results[i] = [variable, { kind: 'Number', value: result }];
-            } else {
-                const result = evaluateExpression(statement, variables);
-                results[i] = { kind: 'Number', value: result };
-            }
-        }
-    }
-
-    // Call the functions when the component is mounted
-    import {onMount} from 'svelte';
 
     onMount(() => {
         myParse()
-        executeCalculations();
+        myCalculate()
     });
 </script>
 
 <div bind:innerHTML={textAreaContent} contenteditable/>
 
 <button on:click={myParse}>Parse</button>
-<button on:click={executeCalculations}>Calculate</button>
+<button on:click={myCalculate}>Calculate</button>
 
 <div>
-    {#each results as statement}
+    {#each statements as statement, index}
         {#if Array.isArray(statement)}
-            <p>{statement[0]}: {expressionToString(statement[1])}</p>
+<!--            <p>{statement[0]}-->
+<!--                : {expressionToString(statement[1])} {results[index] !== undefined ? `= ${results[index][1]}` : ''}</p>-->
+            <p>
+                {statement[0]}: {expressionToString(statement[1])}
+                {results[index] !== undefined ? `= ${results[index]}` : ''}
+            </p>
         {:else}
-            <p>{expressionToString(statement)}</p>
+            <p>{expressionToString(statement)} {results[index] !== undefined ? `= ${results[index]}` : ''}</p>
         {/if}
     {/each}
 </div>
-
 
 <style>
     [contenteditable] {

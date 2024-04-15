@@ -1,6 +1,5 @@
 import {expect, test} from 'vitest'
 import {parseExpression, parseLine, parseTextArea} from "../src/lib/parser";
-import type {CalculatorNumber} from "../src/lib/parser";
 
 test('test parser', () => {
     const results = parseTextArea("x = 2<br><br><div>y = x + 1</div><div><br></div><div>z = y + z<br></div>")

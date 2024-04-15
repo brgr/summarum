@@ -4,15 +4,27 @@ export type CalculatorNumber = {
     value: number;
 };
 
+export function CalculatorNumber(value: number): CalculatorNumber {
+    return {kind: 'Number', value};
+}
+
 export type CalculatorVariable = {
     kind: 'Variable';
     name: string;
 };
 
+export function CalculatorVariable(name: string): CalculatorVariable {
+    return {kind: 'Variable', name};
+}
+
 export type CalculatorSum = {
     kind: 'Sum';
     elements: Expression[];
 };
+
+export function CalculatorSum(elements: Expression[]): CalculatorSum {
+    return {kind: 'Sum', elements};
+}
 
 export type CalculatorProduct = {
     kind: 'Product';
@@ -20,6 +32,7 @@ export type CalculatorProduct = {
 };
 
 export type Expression = CalculatorNumber | CalculatorVariable | CalculatorSum | CalculatorProduct;
+// TODO: Change this to a well-defined type
 export type VariableAssignment = [string, Expression];
 export type CalculatorStatement = VariableAssignment | Expression;
 
