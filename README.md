@@ -18,6 +18,7 @@ The idea of such a tool is not completely new, it exists already, but mainly for
 - [Soulver](https://soulver.app)
 - [Calca](https://calca.io/)
 - [Numi](https://numi.app/)
+- [MathNotepad](https://mathnotepad.com/#) (by the `mathjs` author himself)
 
 My idea is that I want those for the web.
 
