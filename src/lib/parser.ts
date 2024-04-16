@@ -6,9 +6,10 @@ export function parseTextAreaContent(textAreaContent: string): string[] {
         .replace(/&nbsp;/g, ' ')
         .replaceAll(/ +/g, ' ');
 
+
     const lines = cleanedTextAreaContent
-        .split('<br>')
+        .split(/<br\s*\/?>/g)
         .filter(line => line.trim().length > 0);
 
-    return lines;
+    return lines.map(line => line.replace(/<span class="calculator-result"( contenteditable="false")?>.*?<\/span>/g, '').trim());
 }
