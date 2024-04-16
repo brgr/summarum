@@ -1,41 +1,14 @@
-import {type CalculatorStatement, type Expression} from "./parser";
+import {all, create} from 'mathjs'
 
-export type CalculatorResult = [string, number] | number;
+const config = {}
+const mathjs = create(all, config)
 
-export function evaluateExpression(expression: Expression, variables: Record<string, number> = {}): number {
-    console.log(expression, variables);
+export function mathjsEvaluate(statements: string[]): number[] {
+    let result = mathjs.evaluate(statements);
 
-    if (expression.kind === 'Number') {
-        return expression.value;
-    } else if (expression.kind === 'Variable') {
-        return variables[expression.name] ?? NaN;
-    } else if (expression.kind === 'Sum') {
-        return expression.elements.reduce((sum, expr) => sum + evaluateExpression(expr, variables), 0);
-    } else if (expression.kind === 'Product') {
-        return expression.factors.reduce((product, expr) => product * evaluateExpression(expr, variables), 1);
+    if (result.length > 0 && mathjs.isResultSet(result[0])) {
+        return result[0].entries;
+    } else {
+        return result;
     }
-    throw new Error(`Invalid expression: ${JSON.stringify(expression)}`);
-}
-
-
-export function executeCalculations(
-    statements: CalculatorStatement[],
-    variables: Record<string, number>
-): CalculatorResult[] {
-    const results: CalculatorResult[] = new Array(statements.length);
-
-    for (let i = 0; i < results.length; i++) {
-        const statement = statements[i];
-
-        if (Array.isArray(statement)) {
-            const [variable, expression] = statement;
-            const result = evaluateExpression(expression, variables);
-            variables[variable] = result;
-            results[i] = [variable, result];
-        } else {
-            results[i] = evaluateExpression(statement, variables);
-        }
-    }
-
-    return results;
 }

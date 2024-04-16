@@ -1,20 +1,21 @@
 <script lang="ts">
-    import {type CalculatorStatement, expressionToString, parseTextArea} from "./parser";
+    import {cleanTextAreContent} from "./parser";
     import {onMount} from 'svelte';
-    import {type CalculatorResult, executeCalculations} from "./eval";
+    import {mathjsEvaluate} from "./eval";
 
     let textAreaContent = 'x = 2\n\ny = x + 1'.replace(/\n/g, '<br>');
-    let statements: CalculatorStatement[] = [];
-    let results: CalculatorResult[] = [];
+    let statements: string[] = [];
+    let results: number[] = [];
 
     function myParse() {
-        statements = parseTextArea(textAreaContent);
+        statements = cleanTextAreContent(textAreaContent);
     }
 
     let variables: Record<string, number> = {};
 
     function myCalculate() {
-        results = executeCalculations(statements, variables);
+        // results = executeCalculations(statements, variables);
+        results = mathjsEvaluate(statements);
     }
 
     onMount(() => {
@@ -30,16 +31,9 @@
 
 <div>
     {#each statements as statement, index}
-        {#if Array.isArray(statement)}
-<!--            <p>{statement[0]}-->
-<!--                : {expressionToString(statement[1])} {results[index] !== undefined ? `= ${results[index][1]}` : ''}</p>-->
-            <p>
-                {statement[0]}: {expressionToString(statement[1])}
-                {results[index] !== undefined ? `= ${results[index]}` : ''}
-            </p>
-        {:else}
-            <p>{expressionToString(statement)} {results[index] !== undefined ? `= ${results[index]}` : ''}</p>
-        {/if}
+        <p>
+            {statement} = {results[index]}
+        </p>
     {/each}
 </div>
 
