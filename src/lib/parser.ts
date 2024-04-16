@@ -1,6 +1,5 @@
-export type CalculatorStatement = String
 
-export function cleanTextAreContent(textAreaContent: string): string[] {
+export function parseTextAreaContent(textAreaContent: string): string[] {
     const cleanedTextAreaContent = textAreaContent
         .replace(/<div>/g, '')
         .replace(/<\/div>/g, '')

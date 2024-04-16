@@ -1,38 +1,23 @@
 <script lang="ts">
-    import {cleanTextAreContent} from "./parser";
-    import {onMount} from 'svelte';
+    import {parseTextAreaContent} from "./parser";
     import {mathjsEvaluate} from "./eval";
 
     let textAreaContent = 'x = 2\n\ny = x + 1'.replace(/\n/g, '<br>');
-    let statements: string[] = [];
-    let results: number[] = [];
+    let statements: string[];
+    let results: number[];
 
-    function myParse() {
-        statements = cleanTextAreContent(textAreaContent);
-    }
-
-    let variables: Record<string, number> = {};
-
-    function myCalculate() {
-        // results = executeCalculations(statements, variables);
+    $: {
+        statements = parseTextAreaContent(textAreaContent);
         results = mathjsEvaluate(statements);
     }
-
-    onMount(() => {
-        myParse()
-        myCalculate()
-    });
 </script>
 
 <div bind:innerHTML={textAreaContent} contenteditable/>
 
-<button on:click={myParse}>Parse</button>
-<button on:click={myCalculate}>Calculate</button>
-
 <div>
     {#each statements as statement, index}
         <p>
-            {statement} = {results[index]}
+            {statement} = {results && results[index] ? results[index] : 'N/A'}
         </p>
     {/each}
 </div>
