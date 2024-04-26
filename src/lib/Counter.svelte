@@ -2,38 +2,71 @@
     import {parseTextAreaContent} from "./parser";
     import {mathjsEvaluate} from "./eval";
 
-    let textAreaContent = 'x = 2<span class="calculator-result" contenteditable="false">2</span><br /><br />y = x + 1<span class="calculator-result" contenteditable="false">3</span>';
+    let textAreaContent = '<div>x = 2</div><div>y = 3</div><div>z = x + y</div>';
+    let calculatorOutput = '';
     let statements: string[];
     let results: number[];
-
-    // TODO: This all works fairly well now. However, since I'm replacing the textAreaContent, the cursor position is lost.
-    //  I need to find a way to keep the cursor position.
-    // Probably this can help: https://svelte.dev/repl/2c36ef2a63d744038d50efd7bec2b6fb?version=4.2.14
 
     $: {
         statements = parseTextAreaContent(textAreaContent);
         results = mathjsEvaluate(statements);
-        textAreaContent = statements.map((statement, index) => {
-            return statement + `<span class="calculator-result" contenteditable="false">${results && results[index] ? results[index] : 'N/A'}</span>`;
-        }).join('<br /><br />');
+
+        calculatorOutput = results.map((result) => {
+            return `<span class="calculator-result" contenteditable="false">${result ? result : 'N/A'}</span>`;
+        }).join('<br />');
     }
 </script>
 
-<div bind:innerHTML={textAreaContent} class="calculator-textarea" contenteditable/>
+<div class="calculator-area">
+    <div bind:innerHTML={textAreaContent} class="calculator-textarea" contenteditable/>
+    <div class="calculator-output">{@html calculatorOutput}</div>
+</div>
 
 <style>
     [contenteditable] {
+        /*padding: 0.5em;*/
+        /*margin-bottom: 2em;*/
+        /*border: 1px solid #eee;*/
+        /*border-radius: 4px;*/
+        /*text-align: left;*/
+    }
+
+    .calculator-area {
         padding: 0.5em;
         margin-bottom: 2em;
         border: 1px solid #eee;
         border-radius: 4px;
         text-align: left;
+
+        /* The two divs inside should be side by side. The left div should take more space */
+        display: flex;
+        /*flex-direction: column;*/
+        /*justify-content: center;*/
+        align-items: stretch;
+
+        width: 18em;
+    }
+
+    /*.calculator-area {*/
+    /*    outline: -webkit-focus-ring-color auto 1px;*/
+    /*}*/
+
+    .calculator-textarea:focus-visible {
+        /* TODO: I want to have this on the calculator-area instead - how do I do that? */
+        outline: none;
     }
 
     .calculator-textarea {
-        max-width: 20em;
-        min-width: 14em;
-        margin: 0 auto;
+        /*max-width: 20em;*/
+        width: 80%;
+        /*min-width: 14em;*/
+        /*margin: 0 auto;*/
+
+        font-size: 1.05em;
+    }
+
+    .calculator-output {
+        width: 20%;
 
         font-size: 1.05em;
     }

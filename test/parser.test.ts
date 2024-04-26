@@ -7,12 +7,18 @@ test('test cleanTextAreContent', () => {
 })
 
 test('test cleanTextAreContent with div', () => {
-    const results = parseTextAreaContent("x = 2<span class=\"calculator-result\">2</span><br /><br />y = x + 1<span class=\"calculator-result\">3</span>");
+    const results = parseTextAreaContent("<div>x = 2</div><br /><br /><div>y = x + 1</div>");
     expect(results).toEqual(["x = 2", "y = x + 1"])
 })
 
 test('test cleanTextAreContent with div not contenteditable', () => {
-    const results = parseTextAreaContent("x = 2<span class=\"calculator-result\" contenteditable=\"false\">2</span>" +
-        "<br /><br />y = x + 1<span class=\"calculator-result\" contenteditable=\"false\">3</span>");
+    const results = parseTextAreaContent("<div>x = 2</div>" +
+        "<br /><div>y = x + 1</div>");
     expect(results).toEqual(["x = 2", "y = x + 1"])
+})
+
+test('test cleanTextAreContent with div not contenteditable, with syntactically wrong input', () => {
+    const results = parseTextAreaContent("<div>x = </div>" +
+        "<br /><br /><div>y = x + 1</div>");
+    expect(results).toEqual(["x = ", "y = x + 1"])
 })
