@@ -12,7 +12,7 @@
         results = mathjsEvaluate(statements);
 
         calculatorOutput = results.map((result) => {
-            return `<span class="calculator-result" contenteditable="false">${result ? result : 'N/A'}</span>`;
+            return `<span class="calculator-result" contenteditable="false">${result ? result : ''}</span>`;
         }).join('<br />');
     }
 </script>
