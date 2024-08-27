@@ -41,7 +41,7 @@
   },
   "productName": "summarum",
   "version": "0.1.0",
-  "identifier": "com.tauri.dev",
+  "identifier": "com.summarum",
   "plugins": {},
   "app": {
     "windows": [
