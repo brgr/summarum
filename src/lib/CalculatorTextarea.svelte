@@ -34,7 +34,7 @@
     .calculator-area {
         padding: 0.5em;
         margin-bottom: 2em;
-        border: 1px solid #eee;
+        /*border: 1px solid #eee;*/
         border-radius: 4px;
         text-align: left;
 
@@ -44,7 +44,7 @@
         /*justify-content: center;*/
         align-items: stretch;
 
-        width: 18em;
+        /*width: auto;*/
     }
 
     /*.calculator-area {*/
