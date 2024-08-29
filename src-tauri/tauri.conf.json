@@ -57,9 +57,11 @@
       {
         "fullscreen": false,
         "height": 600,
+        "minHeight": 300,
         "resizable": true,
         "title": "summarum",
-        "width": 800
+        "width": 800,
+        "minWidth": 400
       }
     ]
   }
