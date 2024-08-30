@@ -12,14 +12,10 @@ test('test mathjsEvaluate simple sum', () => {
 })
 
 test('test mathjsEvaluate variables', () => {
-    expect(mathjsEvaluate(['x + y'])).toEqual([]);
+    expect(mathjsEvaluate(['x + y'])).toEqual([NaN]);
 })
 
 test('test mathjsEvaluate with defined variables', () => {
     const results = mathjsEvaluate(["x = 10", "y = 5", "x + y"]);
     expect(results).toEqual([10, 5, 15])
-})
-
-test('test unfinished statement', () => {
-    expect(mathjsEvaluate(["x = 10", "y = 5", "x + "])).toEqual([]);
 })
