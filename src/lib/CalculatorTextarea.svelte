@@ -63,6 +63,10 @@
         /*margin: 0 auto;*/
 
         font-size: 1.05em;
+
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
     }
 
     .calculator-output {
