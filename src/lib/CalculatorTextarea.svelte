@@ -23,33 +23,15 @@
 </div>
 
 <style>
-    [contenteditable] {
-        /*padding: 0.5em;*/
-        /*margin-bottom: 2em;*/
-        /*border: 1px solid #eee;*/
-        /*border-radius: 4px;*/
-        /*text-align: left;*/
-    }
-
     .calculator-area {
         padding: 0.5em;
         margin-bottom: 2em;
-        /*border: 1px solid #eee;*/
-        border-radius: 4px;
         text-align: left;
 
         /* The two divs inside should be side by side. The left div should take more space */
         display: flex;
-        /*flex-direction: column;*/
-        /*justify-content: center;*/
         align-items: stretch;
-
-        /*width: auto;*/
     }
-
-    /*.calculator-area {*/
-    /*    outline: -webkit-focus-ring-color auto 1px;*/
-    /*}*/
 
     .calculator-textarea:focus-visible {
         /* TODO: I want to have this on the calculator-area instead - how do I do that? */
@@ -57,10 +39,7 @@
     }
 
     .calculator-textarea {
-        /*max-width: 20em;*/
         width: 80%;
-        /*min-width: 14em;*/
-        /*margin: 0 auto;*/
 
         font-size: 1.05em;
 
