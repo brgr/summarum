@@ -2,23 +2,49 @@
     import {parseTextAreaContent} from "./parser";
     import {mathjsEvaluate} from "./eval";
 
-    let textAreaContent = '<div>x = 2</div><div>y = 3</div><div>z = x + y</div>';
+    import {updateEditor} from "./editor_stuff";
+
+    let calculatorEditorWasEmpty = true;
+    let calculatorEditorInnerHtml = '';
+
     let calculatorOutput = '';
     let statements: string[];
     let results: number[];
 
-    $: {
-        statements = parseTextAreaContent(textAreaContent);
-        results = mathjsEvaluate(statements);
+    function editorInputHandler(event: Event) {
+        // const target = event.target as HTMLElement;
+        // calculatorEditorInnerHtml = target.innerHTML;
+        updateEditor(event.target);
+    }
 
-        calculatorOutput = results.map((result) => {
-            return `<span class="calculator-result" contenteditable="false">${result ? result : ''}</span>`;
-        }).join('<br />');
+    $: {
+        // console.log('textAreaContent:', calculatorEditorInnerHtml);
+        //
+        // if (calculatorEditorInnerHtml === '') { // TODO: Maybe also check for when we have elements inside, but they are all empty?
+        //     calculatorOutput = '';
+        //     calculatorEditorWasEmpty = true;
+        // } else {
+        //
+        //     if (calculatorEditorWasEmpty) {
+        //         calculatorEditorInnerHtml = `<span class="calculator-editor-line">${calculatorEditorInnerHtml}</span>`;
+        //     }
+        //
+        //     calculatorEditorWasEmpty = false;
+        //
+        //     statements = parseTextAreaContent(calculatorEditorInnerHtml);
+        //     console.log('statements:', statements);
+        //     results = mathjsEvaluate(statements);
+        //     console.log('results:', results);
+        //
+        //     calculatorOutput = results.map((result) => {
+        //         return `<span class="calculator-result" contenteditable="false">${result ? result : ''}</span>`;
+        //     }).join('<br />');
+        // }
     }
 </script>
 
 <div class="calculator-area">
-    <div bind:innerHTML={textAreaContent} class="calculator-textarea" contenteditable/>
+    <div bind:innerHTML={calculatorEditorInnerHtml} on:input={editorInputHandler} class="calculator-textarea" contenteditable/>
     <div class="calculator-output">{@html calculatorOutput}</div>
 </div>
 
