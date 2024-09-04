@@ -1,14 +1,6 @@
 // @ts-nocheck
-// const editor = document.getElementById('editor');
-// const selectionOutput = document.getElementById('selection');
 
-/**
- * @param {{ childNodes: Iterable<any> | ArrayLike<any>; }} element
- */
 function getTextSegments(element) {
-  /**
-   * @type {{ text: any; node: any; }[]}
-   */
   const textSegments = [];
   Array.from(element.childNodes).forEach((node) => {
     switch (node.nodeType) {
@@ -27,9 +19,7 @@ function getTextSegments(element) {
   return textSegments;
 }
 
-// editor.addEventListener('input', updateEditor);
-
-function updateEditor(editor) {
+export function updateEditor(editor) {
   console.log('updateEditor');
 
   const sel = window.getSelection();
@@ -52,8 +42,6 @@ function updateEditor(editor) {
 
   restoreSelection(editor, anchorIndex, focusIndex);
 }
-
-export { updateEditor };
 
 function restoreSelection(editor, absoluteAnchorIndex, absoluteFocusIndex) {
   const sel = window.getSelection();
@@ -87,11 +75,11 @@ function renderText(text) {
       return `<strong>${word}</strong>`;
     } else if (word === 'red') {
       return `<span style='color:red'>${word}</span>`;
+    } else if (word.match(/^\d+$/)) {
+      return `<span style='color:blue'>${word}</span>`;
     } else {
       return word;
     }
   })
   return output.join('');
 }
-
-// updateEditor();
