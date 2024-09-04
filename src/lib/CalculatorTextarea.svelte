@@ -14,7 +14,11 @@
     function editorInputHandler(event: Event) {
         // const target = event.target as HTMLElement;
         // calculatorEditorInnerHtml = target.innerHTML;
-        updateEditor(event.target);
+        console.log('event:', event);
+        let inputKey = event.data;
+        let inputType = event.inputType;
+        console.log('event.target:', event.target);
+        updateEditor(event.target, inputKey, inputType);
     }
 
     $: {
@@ -44,7 +48,10 @@
 </script>
 
 <div class="calculator-area">
-    <div bind:innerHTML={calculatorEditorInnerHtml} on:input={editorInputHandler} class="calculator-textarea" contenteditable/>
+<!--    <div bind:innerHTML={calculatorEditorInnerHtml} on:input={editorInputHandler} class="calculator-textarea" contenteditable="true">-->
+    <div on:input={editorInputHandler} class="calculator-textarea" contenteditable="true">
+       <div class="editor-line" contenteditable="true"><br /></div>
+    </div>
     <div class="calculator-output">{@html calculatorOutput}</div>
 </div>
 

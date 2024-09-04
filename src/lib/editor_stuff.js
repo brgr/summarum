@@ -2,13 +2,20 @@
 
 function getTextSegments(element) {
   const textSegments = [];
+
   Array.from(element.childNodes).forEach((node) => {
+    console.log('childNode:', node, 'nodeType:', node.nodeType);
+
     switch (node.nodeType) {
       case Node.TEXT_NODE:
         textSegments.push({text: node.nodeValue, node});
         break;
 
       case Node.ELEMENT_NODE:
+        if (node.tagName === 'BR') {
+          textSegments.push({text: '\n', node});
+          break;
+        }
         textSegments.splice(textSegments.length, 0, ...(getTextSegments(node)));
         break;
 
@@ -16,41 +23,76 @@ function getTextSegments(element) {
         throw new Error(`Unexpected node type: ${node.nodeType}`);
     }
   });
+
+  console.log('textSegments:', textSegments);
   return textSegments;
 }
 
-export function updateEditor(editor) {
+export function updateEditor(editor, inputKey, inputType) {
   console.log('updateEditor');
 
-  const sel = window.getSelection();
+  // For anchor node, focus node, etc., see here:
+  // https://developer.mozilla.org/en-US/docs/Web/API/Selection
+
+  // get input key
+  // if (inputType === 'insertParagraph') {
+  //   console.log('insertParagraph');
+  //   return;
+  // }
+
   const textSegments = getTextSegments(editor);
+  console.log('textSegments:', textSegments);
   const textContent = textSegments.map(({text}) => text).join('');
+
+  // textContent.replace(/<strong>(.*?)<\/strong>/g, 'bold');
+
+  const selection = window.getSelection();
   let anchorIndex = null;
   let focusIndex = null;
   let currentIndex = 0;
+
+  console.log('selection:', selection);
+
+  // TODO: What is an anchor node and a focus node?
   textSegments.forEach(({text, node}) => {
-    if (node === sel.anchorNode) {
-      anchorIndex = currentIndex + sel.anchorOffset;
+    console.log('node:', node);
+
+    if (node === selection.anchorNode) {
+      anchorIndex = currentIndex + selection.anchorOffset;
     }
-    if (node === sel.focusNode) {
-      focusIndex = currentIndex + sel.focusOffset;
+    if (node === selection.focusNode) {
+      focusIndex = currentIndex + selection.focusOffset;
     }
+
+    // Because the node of newline is actually the div.editor-line (I guess the next div, but I'm not sure),
+    // we need to set these indices manually for now. This is kind of a hack, maybe there is a better way?
+    if (text === '\n') {
+      anchorIndex = currentIndex;
+      focusIndex = currentIndex;
+    }
+
     currentIndex += text.length;
   });
 
-  editor.innerHTML = renderText(textContent);
+  editor.innerHTML = renderText(editor, textContent);
+  // get all divs inside editor
+
+  // Print all relevant information in one line
+  console.log(`textContent: ${textContent}, anchorIndex: ${anchorIndex}, focusIndex: ${focusIndex}`);
 
   restoreSelection(editor, anchorIndex, focusIndex);
 }
 
 function restoreSelection(editor, absoluteAnchorIndex, absoluteFocusIndex) {
-  const sel = window.getSelection();
+  const selection = window.getSelection();
   const textSegments = getTextSegments(editor);
+
   let anchorNode = editor;
   let anchorIndex = 0;
   let focusNode = editor;
   let focusIndex = 0;
   let currentIndex = 0;
+
   textSegments.forEach(({text, node}) => {
     const startIndexOfNode = currentIndex;
     const endIndexOfNode = startIndexOfNode + text.length;
@@ -65,21 +107,64 @@ function restoreSelection(editor, absoluteAnchorIndex, absoluteFocusIndex) {
     currentIndex += text.length;
   });
 
-  sel.setBaseAndExtent(anchorNode, anchorIndex, focusNode, focusIndex);
+  selection.setBaseAndExtent(anchorNode, anchorIndex, focusNode, focusIndex);
 }
 
-function renderText(text) {
-  const words = text.split(/(\s+)/);
-  const output = words.map((word) => {
-    if (word === 'bold') {
-      return `<strong>${word}</strong>`;
-    } else if (word === 'red') {
-      return `<span style='color:red'>${word}</span>`;
-    } else if (word.match(/^\d+$/)) {
-      return `<span style='color:blue'>${word}</span>`;
-    } else {
-      return word;
+function renderText(editor, text) {
+  // parse all div.editor-line from innerHTML (NOT with regex! but from DOM)
+  let divs = editor.querySelectorAll('div.editor-line');
+
+  // for each div.editor-line, parse innerHTML into words
+  for (let i = 0; i < divs.length; i++) {
+    let div = divs[i];
+    let innerHTML = div.innerHTML;
+    // let words = div.textContent.split(' ');
+
+    // query all
+    let all = div.childNodes;
+    let words = Array.from(all).map(node => {
+      if (node.tagName === 'BR' ||
+        (node.childNodes && Array.from(node.childNodes).filter(n => n.tagName === 'BR').length > 0)) {
+        return '<br>';
+      }
+      return node.textContent;
+    });
+
+    words = words.flat().join('').split(' ');
+
+    // for each word, apply the styling
+    for (let j = 0; j < words.length; j++) {
+      let word = words[j];
+      if (word === 'bold') {
+        words[j] = `<strong>${word}</strong>`;
+      } else if (word === 'red') {
+        words[j] = `<span style='color:red'>${word}</span>`;
+      } else if (word.match(/^\d+$/)) {
+        words[j] = `<span style='color:blue'>${word}</span>`;
+      }
     }
-  })
-  return output.join('');
+
+    // rejoin the words into innerHTML
+    div.innerHTML = words.join(' ');
+  }
+
+  console.log('editor.innerHTML:', editor.innerHTML);
+
+  return editor.innerHTML;
+
+  // const words = text.split(/(\s+)/);
+  //
+  // const output = words.map((word) => {
+  //   if (word === 'bold') {
+  //     return `<strong>${word}</strong>`;
+  //   } else if (word === 'red') {
+  //     return `<span style='color:red'>${word}</span>`;
+  //   } else if (word.match(/^\d+$/)) {
+  //     return `<span style='color:blue'>${word}</span>`;
+  //   } else {
+  //     return word;
+  //   }
+  // });
+  //
+  // return output.join('');
 }
