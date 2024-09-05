@@ -16,17 +16,38 @@ test('CalculatorTextarea renders the textarea', () => {
     expect(textarea.textContent).toBe('');
 });
 
-test('CalculatorTextarea: enter a letter', async () => {
+test('CalculatorTextarea: enter a letter in an editor-line', async () => {
+    const {container} = render(CalculatorTextarea);
+
+    // const textarea = container.querySelector('.calculator-textarea')!;
+    const textarea = container.querySelector('.editor-line')!;
+    await userEvent.type(textarea, 'a');
+
+    expect(textarea).toHaveTextContent('a');
+    expect(textarea.outerHTML).toEqual('<div class="editor-line" contenteditable="true">a<br></div>');
+});
+
+test('CalculatorTextarea: enter a letter in the calculator-textarea', async () => {
     const {container} = render(CalculatorTextarea);
 
     const textarea = container.querySelector('.calculator-textarea')!;
     await userEvent.type(textarea, 'a');
 
     expect(textarea).toHaveTextContent('a');
-    // FIXME: It works, but: It looks like this:
-    // a<div class="editor-line" contenteditable="true"><br></div>
-    // I.e., the letter not inside .editor-line
-    // Also, at this point ,the there should be no line break yet!
+    expect(textarea.innerHTML).toEqual('<div class="editor-line" contenteditable="true">a<br></div>');
 });
 
+test('CalculatorTextarea: enter a letter in the CalculatorTextarea component', async () => {
+    render(CalculatorTextarea);
+
+    const textarea = screen.getByLabelText('calculator-textarea');
+    await userEvent.type(textarea, 'a');
+
+    expect(textarea).toHaveTextContent('a');
+    console.log(textarea.innerHTML);
+    expect(textarea.innerHTML).toEqual('<div class="editor-line" contenteditable="true">a<br></div>');
+});
+
+
 // TODO: Add a test for syntax highlighting of numbers
+// TODO: A test where the user presses only the backspace key at start

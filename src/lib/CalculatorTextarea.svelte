@@ -42,14 +42,14 @@
         //
         //     calculatorOutput = results.map((result) => {
         //         return `<span class="calculator-result" contenteditable="false">${result ? result : ''}</span>`;
-        //     }).join('<br />');
+        //     }).join('<br />')nodeType;
         // }
     }
 </script>
 
 <div class="calculator-area">
 <!--    <div bind:innerHTML={calculatorEditorInnerHtml} on:input={editorInputHandler} class="calculator-textarea" contenteditable="true">-->
-    <div on:input={editorInputHandler} class="calculator-textarea" contenteditable="true">
+    <div on:input={editorInputHandler} class="calculator-textarea" aria-label="calculator-textarea" contenteditable="true">
        <div class="editor-line" contenteditable="true"><br /></div>
     </div>
     <div class="calculator-output">{@html calculatorOutput}</div>

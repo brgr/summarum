@@ -40,6 +40,34 @@ export function updateEditor(editor, inputKey, inputType) {
   //   return;
   // }
 
+  // if editor has class .calculator-textarea
+  if (
+    editor.classList.contains('calculator-textarea') &&
+    inputType === 'insertText' &&
+    editor.childNodes.length === 2 &&
+    editor.childNodes[0].nodeType === Node.TEXT_NODE &&
+    editor.childNodes[1].nodeType === Node.ELEMENT_NODE &&
+    editor.childNodes[1].classList.contains('editor-line')
+  ) {
+    // remove the text node
+    let textNode = editor.childNodes[0];
+    let editorLine = editor.childNodes[1];
+
+    editor.removeChild(textNode);
+    // place it in the first position of the editor-line
+    editorLine.insertBefore(textNode, editorLine.firstChild);
+  } else if (
+    editor.childNodes.length === 0 &&
+    editor.classList.contains('calculator-textarea')
+  ) {
+    // if editor is empty, add a div.editor-line
+    let editorLine = document.createElement('div');
+    editorLine.classList.add('editor-line');
+    editorLine.setAttribute('contenteditable', 'true');
+    editorLine.appendChild(document.createElement('br'));
+    editor.appendChild(editorLine);
+  }
+
   const textSegments = getTextSegments(editor);
   console.log('textSegments:', textSegments);
   const textContent = textSegments.map(({text}) => text).join('');
@@ -75,7 +103,6 @@ export function updateEditor(editor, inputKey, inputType) {
   });
 
   editor.innerHTML = renderText(editor, textContent);
-  // get all divs inside editor
 
   // Print all relevant information in one line
   console.log(`textContent: ${textContent}, anchorIndex: ${anchorIndex}, focusIndex: ${focusIndex}`);
