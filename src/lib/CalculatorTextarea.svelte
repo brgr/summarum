@@ -48,7 +48,7 @@
 </script>
 
 <div class="calculator-area">
-<!--    <div bind:innerHTML={calculatorEditorInnerHtml} on:input={editorInputHandler} class="calculator-textarea" contenteditable="true">-->
+    <!-- TODO: I think the aria-label should be more descriptive: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label -->
     <div on:input={editorInputHandler} class="calculator-textarea" aria-label="calculator-textarea" contenteditable="true">
        <div class="editor-line" contenteditable="true"><br /></div>
     </div>
