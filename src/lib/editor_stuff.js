@@ -140,11 +140,13 @@ function restoreSelection(editor, absoluteAnchorIndex, absoluteFocusIndex) {
 function renderText(editor, text) {
   // parse all div.editor-line from innerHTML (NOT with regex! but from DOM)
   let divs = editor.querySelectorAll('div.editor-line');
+  console.log('count of divs:', divs.length);
 
   // for each div.editor-line, parse innerHTML into words
   for (let i = 0; i < divs.length; i++) {
     let div = divs[i];
     let innerHTML = div.innerHTML;
+    console.log('innerHTML in renderText:', innerHTML);
     // let words = div.textContent.split(' ');
 
     // query all

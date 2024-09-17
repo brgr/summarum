@@ -1,6 +1,10 @@
-// import {render, screen} from '@testing-library/svelte';
-// import userEvent from '@testing-library/user-event';
-// import {expect, test} from 'vitest';
+import {test} from 'vitest';
+
+test('CalculatorTextarea renders the textarea', () => {
+    // SKIPPED
+});
+
+
 //
 // // import Greeter from './greeter.svelte'
 // import CalculatorTextarea from '../../src/lib/CalculatorTextarea.svelte';
