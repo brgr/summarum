@@ -1,98 +1,90 @@
 <script lang="ts">
-    import {parseTextAreaContent} from "./parser";
-    import {mathjsEvaluate} from "./eval";
+    import {EditorView, basicSetup} from "codemirror"
+    import {javascript} from "@codemirror/lang-javascript"
+    import {onMount} from "svelte";
+    import {
+        crosshairCursor,
+        drawSelection,
+        dropCursor, highlightActiveLine,
+        highlightActiveLineGutter,
+        highlightSpecialChars, keymap,
+        lineNumbers, rectangularSelection
+    } from "@codemirror/view";
+    import {defaultKeymap, history, historyKeymap} from "@codemirror/commands";
+    import {
+        bracketMatching,
+        defaultHighlightStyle,
+        foldGutter, foldKeymap,
+        indentOnInput,
+        syntaxHighlighting
+    } from "@codemirror/language";
+    import {EditorState} from "@codemirror/state";
+    import {autocompletion, closeBrackets, closeBracketsKeymap, completionKeymap} from "@codemirror/autocomplete";
+    import {highlightSelectionMatches, searchKeymap} from "@codemirror/search";
+    import {lintKeymap} from "@codemirror/lint";
+    import {checkboxPlugin} from "./codemirror_stuff";
+    import {mathOutputPlugin} from "./math_output_widget_decorator";
 
-    import {updateEditor} from "./editor_stuff";
 
-    let calculatorEditorWasEmpty = true;
-    let calculatorEditorInnerHtml = '';
+    let editorDiv: HTMLDivElement;
 
-    let calculatorOutput = '';
-    let statements: string[];
-    let results: number[];
 
-    function editorInputHandler(event: Event) {
-        // const target = event.target as HTMLElement;
-        // calculatorEditorInnerHtml = target.innerHTML;
-        console.log('event:', event);
-        let inputKey = event.data;
-        let inputType = event.inputType;
-        console.log('event.target:', event.target);
-        updateEditor(event.target, inputKey, inputType);
-    }
+    onMount(() => {
+        let editor = new EditorView({
+            extensions: [
+                [
+                    // lineNumbers(),
+                    highlightActiveLineGutter(),
+                    EditorView.lineWrapping,
+                    highlightSpecialChars(),
+                    history(),
+                    // foldGutter(),
+                    drawSelection(),
+                    dropCursor(),
+                    EditorState.allowMultipleSelections.of(true),
+                    indentOnInput(),
+                    syntaxHighlighting(defaultHighlightStyle, {fallback: true}),
+                    bracketMatching(),
+                    closeBrackets(),
+                    autocompletion(),
+                    rectangularSelection(),
+                    crosshairCursor(),
+                    highlightActiveLine(),
+                    highlightSelectionMatches(),
+                    keymap.of([
+                        ...closeBracketsKeymap,
+                        ...defaultKeymap,
+                        ...searchKeymap,
+                        ...historyKeymap,
+                        ...foldKeymap,
+                        ...completionKeymap,
+                        ...lintKeymap
+                    ]),
 
-    $: {
-        // console.log('textAreaContent:', calculatorEditorInnerHtml);
-        //
-        // if (calculatorEditorInnerHtml === '') { // TODO: Maybe also check for when we have elements inside, but they are all empty?
-        //     calculatorOutput = '';
-        //     calculatorEditorWasEmpty = true;
-        // } else {
-        //
-        //     if (calculatorEditorWasEmpty) {
-        //         calculatorEditorInnerHtml = `<span class="calculator-editor-line">${calculatorEditorInnerHtml}</span>`;
-        //     }
-        //
-        //     calculatorEditorWasEmpty = false;
-        //
-        //     statements = parseTextAreaContent(calculatorEditorInnerHtml);
-        //     console.log('statements:', statements);
-        //     results = mathjsEvaluate(statements);
-        //     console.log('results:', results);
-        //
-        //     calculatorOutput = results.map((result) => {
-        //         return `<span class="calculator-result" contenteditable="false">${result ? result : ''}</span>`;
-        //     }).join('<br />')nodeType;
-        // }
-    }
+                    checkboxPlugin,
+                    mathOutputPlugin,
+                ],
+                javascript()
+            ],
+            parent: editorDiv
+        });
+
+    })
 </script>
 
+
 <div class="calculator-area">
-    <!-- TODO: I think the aria-label should be more descriptive: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label -->
-    <div on:input={editorInputHandler} class="calculator-textarea" aria-label="calculator-textarea" contenteditable="true">
-       <div class="editor-line" contenteditable="true"><br /></div>
+    <div bind:this={editorDiv} class="codemirror"></div>
+    <div class="calculator-output">
+        <div class="output-value">5</div>
+        <div class="output-value">5</div>
+        <div class="output-value">5</div>
     </div>
-    <div class="calculator-output">{@html calculatorOutput}</div>
 </div>
 
+
 <style>
-    .calculator-area {
-        padding: 0.5em;
-        margin-bottom: 2em;
-        text-align: left;
-
-        /* The two divs inside should be side by side. The left div should take more space */
-        display: flex;
-        align-items: stretch;
-    }
-
-    .calculator-textarea:focus-visible {
-        /* TODO: I want to have this on the calculator-area instead - how do I do that? */
-        outline: none;
-    }
-
-    .calculator-textarea {
-        width: 80%;
-
-        font-size: 1.05em;
-
-        white-space: pre-wrap;
-        word-wrap: break-word;
-        overflow-wrap: break-word;
-    }
-
-    .calculator-output {
-        width: 20%;
-
-        font-size: 1.05em;
-    }
-
-    /* We need to make this global s.t. the svelte compiler keeps it, since at first this class doesn't exist. */
-    :global(.calculator-result) {
-        color: #007bff;
-        float: right;
-
-        font-weight: bold;
-        padding-right: .2em;
+    .codemirror {
+        display: contents;
     }
 </style>
