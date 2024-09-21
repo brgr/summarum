@@ -21,10 +21,40 @@ export const mathOutputPlugin = ViewPlugin.fromClass(class {
     decorations: v => v.decorations,
 })
 
+import {all, create} from 'mathjs'
+
+const config = {}
+const mathjs = create(all, config)
+
 class MathOutputWidget extends WidgetType {
+    private readonly line: string;
+    private readonly scope: object;
+
+    constructor(line: string, scope: object) {
+        super();
+
+        this.line = line;
+        this.scope = scope;
+    }
+
     toDOM() {
         let wrap = document.createElement("span")
-        wrap.textContent = " 🧮"
+
+        console.log('this.line', this.line);
+
+        let result = ""
+        try {
+            result = mathjs.evaluate(this.line, this.scope)
+            // math.format(ans, {precision: 14})  // '0.3'
+            result = mathjs.format(result, {precision: 14});
+        } catch (e) {
+        }
+
+        if (result === undefined || result === 'undefined') {
+            result = "";
+        }
+
+        wrap.textContent = " " + result
         wrap.setAttribute("aria-hidden", "true")
         wrap.className = "cm-math-output"
         wrap.style.color = "green"
@@ -47,6 +77,10 @@ class MathOutputWidget extends WidgetType {
 
     ignoreEvent() {
         return false
+    }
+
+    resultingScope() {
+        return this.scope
     }
 }
 
@@ -80,13 +114,21 @@ function mathOutputDecorations(view: EditorView) {
         //     side: 1
         // })
         // // widgets.push(deco.range(view.state.doc))
+
+        let scope = {}
+
         for (let line = 1; line < view.state.doc.lines + 1; line++) {
             let lineStart = view.state.doc.line(line).from
             let lineEnd = view.state.doc.line(line).to
+            let actualLine = view.state.doc.line(line).text;
+
+            let mathOutputWidget = new MathOutputWidget(actualLine, scope);
             let deco = Decoration.widget({
-                widget: new MathOutputWidget(),
+                widget: mathOutputWidget,
                 side: 1
             })
+            scope = mathOutputWidget.resultingScope()
+            console.log('scope', scope)
             widgets.push(deco.range(lineEnd))
         }
     }
