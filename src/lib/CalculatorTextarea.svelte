@@ -24,6 +24,7 @@
     import {lintKeymap} from "@codemirror/lint";
     import {checkboxPlugin} from "./codemirror_stuff";
     import {mathOutputPlugin} from "./math_output_widget_decorator";
+    import {example} from "./mathjs_lezer";
 
 
     let editorDiv: HTMLDivElement;
@@ -64,7 +65,8 @@
                     checkboxPlugin,
                     mathOutputPlugin,
                 ],
-                javascript()
+                // javascript()
+                example()
             ],
             parent: editorDiv
         });

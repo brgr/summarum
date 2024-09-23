@@ -1,0 +1,9 @@
+@top MathJs { (Number | SomethingElse)+ }
+
+@skip { space }
+
+@tokens {
+  space { @whitespace+ }
+  SomethingElse { $[A-Za-z^=\-_\(\)*&%$€@/\[\]]+ }
+  Number { $[0-9]+ }
+}
