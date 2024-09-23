@@ -49,7 +49,7 @@
                     autocompletion(),
                     rectangularSelection(),
                     crosshairCursor(),
-                    highlightActiveLine(),
+                    // highlightActiveLine(),
                     highlightSelectionMatches(),
                     keymap.of([
                         ...closeBracketsKeymap,
@@ -75,11 +75,6 @@
 
 <div class="calculator-area">
     <div bind:this={editorDiv} class="codemirror"></div>
-    <div class="calculator-output">
-        <div class="output-value">5</div>
-        <div class="output-value">5</div>
-        <div class="output-value">5</div>
-    </div>
 </div>
 
 
