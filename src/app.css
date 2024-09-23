@@ -42,11 +42,18 @@ h1 {
 }
 
 #app {
-    /*max-width: 1280px;*/
+    max-width: 56rem;
     width: 100%;
     margin: 0 auto;
+    padding: 1rem;
     /*padding: 2rem;*/
     /*text-align: center;*/
+}
+
+@media (max-width: 768px) {
+    #app {
+        padding: 1rem .4rem;
+    }
 }
 
 button {
@@ -89,3 +96,30 @@ button:focus-visible {
     position: relative;
 }
 
+.cm-editor .cm-content {
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+    line-height: 1.8;
+    font-weight: 400;
+    font-size: 1.2em;
+
+    /*color-scheme: light dark;*/
+    /*color: rgba(255, 255, 255, 0.87);*/
+    /*background-color: #242424;*/
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.cm-math-output {
+    background-color: #242424;
+}
+
+@media (prefers-color-scheme: light) {
+    .cm-editor {
+        color: #213547;
+        background-color: #ffffff;
+    }
+}
