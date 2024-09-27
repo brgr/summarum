@@ -75,8 +75,8 @@
 </script>
 
 
-<div class="calculator-area">
-    <div bind:this={editorDiv} class="codemirror"></div>
+<div class="calculator-area" >
+    <div bind:this={editorDiv} class="codemirror" aria-label="Calculator Textarea"></div>
 </div>
 
 
