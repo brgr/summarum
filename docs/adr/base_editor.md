@@ -120,6 +120,7 @@ However, CodeMirror should be a good option also because it is used in many onli
 - GitHub code editor (on the page directly - not the one on github.dev, which uses VSCode / Monaco)
 - replit
 - ShareLatex/Overleaf
+- Obsidian (Seee [here](https://docs.obsidian.md/Plugins/Editor/Editor) for reference. This means it can do WYSIWYG!)
 - and many more
 
 Some things we might still want to do is:
@@ -132,3 +133,7 @@ Here is an idea on what that could look like: https://svelte.dev/repl/91649ba3e0
 
 I'm not so sure about this. [Here](https://discuss.codemirror.net/t/writing-a-custom-parser-without-using-lezer-or-streamparser/4692) is
 maybe a relevant discussion on this.
+
+Here is also mathjs already working with (older version of?) CodeMirror: https://github.com/josdejong/mathjs-codemirror.
+It's by the mathjs author himself.
+However, they don't use a lexer parser there: https://github.com/josdejong/mathjs-codemirror/pull/1#issue-1909381170.
