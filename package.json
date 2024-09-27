@@ -13,7 +13,7 @@
     "test:all": "npm run test && npm run test:playwright",
     "test:watch": "vitest --watch",
     "tauri": "tauri",
-    "prepare-grammar": "lezer-generator src/lib/my.grammar -o src/lib/parser.js"
+    "prepare-grammar": "lezer-generator src/lib/mathjs.grammar -o src/lib/parser.js"
   },
   "devDependencies": {
     "@lezer/generator": "^1.7.1",
