@@ -33,11 +33,10 @@ export default defineConfig({
 
     /* Configure projects for major browsers */
     projects: [
-        // TODO: Uncomment this again
-        // {
-        //     name: 'chromium',
-        //     use: {...devices['Desktop Chrome']},
-        // },
+        {
+            name: 'chromium',
+            use: {...devices['Desktop Chrome']},
+        },
 
         {
             name: 'firefox',
