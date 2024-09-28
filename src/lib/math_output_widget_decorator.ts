@@ -1,30 +1,25 @@
-import {EditorView, Decoration} from "@codemirror/view"
+import {Decoration, type DecorationSet, EditorView, ViewPlugin, ViewUpdate, WidgetType} from "@codemirror/view"
 import {syntaxTree} from "@codemirror/language"
-import {WidgetType} from "@codemirror/view"
+import {mathjsEvaluate} from "./eval";
 
-import {ViewUpdate, ViewPlugin, type DecorationSet} from "@codemirror/view"
+export const mathOutputPlugin = ViewPlugin.fromClass(
+    class {
+        decorations: DecorationSet
 
-export const mathOutputPlugin = ViewPlugin.fromClass(class {
-    decorations: DecorationSet
-
-    constructor(view: EditorView) {
-        this.decorations = mathOutputDecorations(view)
-    }
-
-    update(update: ViewUpdate) {
-        if (update.docChanged || update.viewportChanged ||
-            syntaxTree(update.startState) != syntaxTree(update.state)) {
-            this.decorations = mathOutputDecorations(update.view)
+        constructor(view: EditorView) {
+            this.decorations = mathOutputDecorations(view)
         }
-    }
-}, {
-    decorations: v => v.decorations,
-})
 
-import {all, create} from 'mathjs'
+        update(update: ViewUpdate) {
+            if (update.docChanged || update.viewportChanged ||
+                syntaxTree(update.startState) != syntaxTree(update.state)) {
+                this.decorations = mathOutputDecorations(update.view)
+            }
+        }
+    },
+    {decorations: v => v.decorations}
+)
 
-const config = {}
-const mathjs = create(all, config)
 
 class MathOutputWidget extends WidgetType {
     private readonly line: string;
@@ -42,17 +37,7 @@ class MathOutputWidget extends WidgetType {
 
         console.log('this.line', this.line);
 
-        let result = ""
-        try {
-            result = mathjs.evaluate(this.line, this.scope)
-            // math.format(ans, {precision: 14})  // '0.3'
-            result = mathjs.format(result, {precision: 14});
-        } catch (e) {
-        }
-
-        if (result === undefined || result === 'undefined') {
-            result = "";
-        }
+        let result = mathjsEvaluate(this.line, this.scope);
 
         wrap.textContent = " " + result
         wrap.setAttribute("aria-hidden", "true")
