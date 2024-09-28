@@ -1,20 +1,20 @@
 <script lang="ts">
-    import {EditorView, basicSetup} from "codemirror"
-    import {javascript} from "@codemirror/lang-javascript"
+    import {EditorView} from "codemirror"
     import {onMount} from "svelte";
     import {
         crosshairCursor,
         drawSelection,
-        dropCursor, highlightActiveLine,
+        dropCursor,
         highlightActiveLineGutter,
-        highlightSpecialChars, keymap,
-        lineNumbers, rectangularSelection
+        highlightSpecialChars,
+        keymap,
+        rectangularSelection
     } from "@codemirror/view";
     import {defaultKeymap, history, historyKeymap} from "@codemirror/commands";
     import {
         bracketMatching,
         defaultHighlightStyle,
-        foldGutter, foldKeymap,
+        foldKeymap,
         indentOnInput,
         syntaxHighlighting
     } from "@codemirror/language";
