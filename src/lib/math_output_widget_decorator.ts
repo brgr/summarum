@@ -37,7 +37,7 @@ class MathOutputWidget extends WidgetType {
 
         console.log('this.line', this.line);
 
-        let result = mathjsEvaluate(this.line, this.scope);
+        let result = mathjsEvaluate(this.line, this.scope).result;
 
         wrap.textContent = " " + result
         wrap.setAttribute("aria-hidden", "true")
