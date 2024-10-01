@@ -1,5 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 
+// TODO : Remove this test file?
+
 test.beforeEach(async ({ page }) => {
   await page.goto('https://demo.playwright.dev/todomvc');
 });

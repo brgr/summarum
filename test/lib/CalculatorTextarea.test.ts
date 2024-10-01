@@ -110,3 +110,5 @@ test('CalculatorTextarea renders the textarea', () => {
 //
 // // TODO: Add a test for syntax highlighting of numbers
 // // TODO: A test where the user presses only the backspace key at start
+
+// TODO: Remove this test file!?
