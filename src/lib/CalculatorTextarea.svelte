@@ -35,7 +35,7 @@
 
 
     import {StateField, StateEffect, RangeSet} from "@codemirror/state"
-    import {myLineNumberGutter} from "./output_math_gutter";
+    import {myLineNumberGutter, myLineNumbers} from "./output_math_gutter";
 
     const breakpointEffect = StateEffect.define<{pos: number, on: boolean}>({
         map: (val, mapping) => ({pos: mapping.mapPos(val.pos), on: val.on})
@@ -82,7 +82,7 @@
                 //  to be able to store the scope there. Though note that we still need to program that also.
                 //  But before we do that, we should be able to find which line was updated here - currently I don't find that in the
                 //  `update` variable!?
-                console.log('lineMarkerChange', update);
+                // console.log('lineMarkerChange', update);
                 // toggleBreakpoint(update.view, update.changes.sections[0])
                 return true;
             },
@@ -154,7 +154,6 @@
         let editor = new EditorView({
             extensions: [
                 [
-                    // lineNumbers(),
                     highlightActiveLineGutter(),
                     EditorView.lineWrapping,
                     highlightSpecialChars(),
@@ -165,7 +164,9 @@
                     myEmptyLineGutter,
                     mathOutputGutter,
                     breakpointGutter,
-                    myLineNumberGutter,
+                    // lineNumbers(),
+                    // myLineNumberGutter,
+                    myLineNumbers(),
                     drawSelection(),
                     dropCursor(),
                     EditorState.allowMultipleSelections.of(true),

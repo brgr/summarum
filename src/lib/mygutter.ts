@@ -20,7 +20,9 @@ export abstract class GutterMarker extends RangeValue {
     }
 
     /// Compare this marker to another marker of the same type.
-    eq(other: GutterMarker): boolean { return false }
+    eq(other: GutterMarker): boolean {
+        return false
+    }
 
     /// Render the DOM node for this marker, if any.
     toDOM?(view: EditorView): Node
@@ -31,7 +33,8 @@ export abstract class GutterMarker extends RangeValue {
 
     /// Called if the marker has a `toDOM` method and its representation
     /// was removed from a gutter.
-    destroy(dom: Node) {}
+    destroy(dom: Node) {
+    }
 }
 
 GutterMarker.prototype.elementClass = ""
@@ -52,7 +55,7 @@ export const gutterLineClass = Facet.define<RangeSet<GutterMarker>>()
 export const gutterWidgetClass =
     Facet.define<(view: EditorView, widget: WidgetType, block: BlockInfo) => GutterMarker | null>()
 
-type Handlers = {[event: string]: (view: EditorView, line: BlockInfo, event: Event) => boolean}
+type Handlers = { [event: string]: (view: EditorView, line: BlockInfo, event: Event) => boolean }
 
 interface GutterConfig {
     /// An extra CSS class to be added to the wrapper (`cm-gutter`)
@@ -113,7 +116,7 @@ const unfixGutters = Facet.define<boolean, boolean>({
 /// horizontally (except on Internet Explorer, which doesn't support
 /// CSS [`position:
 /// sticky`](https://developer.mozilla.org/en-US/docs/Web/CSS/position#sticky)).
-export function gutters(config?: {fixed?: boolean}): Extension {
+export function gutters(config?: { fixed?: boolean }): Extension {
     let result: Extension[] = [
         gutterView,
     ]
@@ -125,7 +128,7 @@ const gutterView = ViewPlugin.fromClass(class {
     gutters: SingleGutterView[]
     dom: HTMLElement
     fixed: boolean
-    prevViewport: {from: number, to: number}
+    prevViewport: { from: number, to: number }
 
     constructor(readonly view: EditorView) {
         this.prevViewport = view.viewport
@@ -241,7 +244,9 @@ const gutterView = ViewPlugin.fromClass(class {
     })
 })
 
-function asArray<T>(val: T | readonly T[]) { return (Array.isArray(val) ? val : [val]) as readonly T[] }
+function asArray<T>(val: T | readonly T[]) {
+    return (Array.isArray(val) ? val : [val]) as readonly T[]
+}
 
 function advanceCursor(cursor: RangeCursor<GutterMarker>, collect: GutterMarker[], pos: number) {
     while (cursor.value && cursor.from <= pos) {
@@ -254,7 +259,7 @@ class UpdateContext {
     cursor: RangeCursor<GutterMarker>
     i = 0
 
-    constructor(readonly gutter: SingleGutterView, viewport: {from: number, to: number}, public height: number) {
+    constructor(readonly gutter: SingleGutterView, viewport: { from: number, to: number }, public height: number) {
         this.cursor = RangeSet.iter(gutter.markers, viewport.from)
     }
 
@@ -374,13 +379,17 @@ class GutterElement {
 
     setMarkers(view: EditorView, markers: readonly GutterMarker[]) {
         let cls = "cm-gutterElement", domPos = this.dom.firstChild
-        for (let iNew = 0, iOld = 0;;) {
+        for (let iNew = 0, iOld = 0; ;) {
             let skipTo = iOld, marker = iNew < markers.length ? markers[iNew++] : null, matched = false
             if (marker) {
                 let c = marker.elementClass
                 if (c) cls += " " + c
                 for (let i = iOld; i < this.markers.length; i++)
-                    if (this.markers[i].compare(marker)) { skipTo = i; matched = true; break }
+                    if (this.markers[i].compare(marker)) {
+                        skipTo = i;
+                        matched = true;
+                        break
+                    }
             } else {
                 skipTo = this.markers.length
             }
@@ -445,11 +454,17 @@ const lineNumberConfig = Facet.define<LineNumberConfig, Required<LineNumberConfi
 })
 
 class NumberMarker extends GutterMarker {
-    constructor(readonly number: string) { super() }
+    constructor(readonly number: string) {
+        super()
+    }
 
-    eq(other: NumberMarker) { return this.number == other.number }
+    eq(other: NumberMarker) {
+        return this.number == other.number
+    }
 
-    toDOM() { return document.createTextNode(this.number) }
+    toDOM() {
+        return document.createTextNode(this.number)
+    }
 }
 
 function formatNumber(view: EditorView, number: number) {
@@ -459,7 +474,11 @@ function formatNumber(view: EditorView, number: number) {
 const lineNumberGutter = activeGutters.compute([lineNumberConfig], state => ({
     class: "cm-lineNumbers",
     renderEmptyElements: false,
-    markers(view: EditorView) { return view.state.facet(lineNumberMarkers) },
+    markers(view: EditorView) {
+        let inputs = view.state.facet(lineNumberMarkers);
+        console.log('original inputs', inputs)
+        return inputs
+    },
     lineMarker(view, line, others) {
         if (others.some(m => m.toDOM)) return null
         return new NumberMarker(formatNumber(view, view.state.doc.lineAt(line.from).number))
