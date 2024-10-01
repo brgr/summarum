@@ -113,6 +113,22 @@ button:focus-visible {
     -moz-osx-font-smoothing: grayscale;
 }
 
+/*.cm-line {*/
+/*    display: flex;*/
+/*}*/
+
+/*.cm-math-output-wrap {*/
+/*    min-width: 50px; !* Ensure the last item is at least 200px wide *!*/
+/*    max-width: 100%; !* Ensure the last item does not exceed the width of the container *!*/
+/*    flex-shrink: 1; !* Allow the last item to shrink if the container is smaller *!*/
+/*    margin-left: auto; !* Push the last item to the right *!*/
+/*}*/
+
+.cm-mygutter {
+    min-width: 30px; /* Ensure the last item is at least 200px wide */
+    background-color: red;
+}
+
 .cm-math-output {
     background-color: #242424;
 }

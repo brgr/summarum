@@ -35,8 +35,6 @@ class MathOutputWidget extends WidgetType {
     toDOM() {
         let wrap = document.createElement("span")
 
-        console.log('this.line', this.line);
-
         let result = mathjsEvaluate(this.line, this.scope).result;
 
         wrap.textContent = " " + result
@@ -48,10 +46,11 @@ class MathOutputWidget extends WidgetType {
         // wrap.style.marginLeft = "auto"
         wrap.style.userSelect = "none";
         wrap.style.pointerEvents = "none";
-        wrap.style.position = "absolute"
-        wrap.style.right = "0"
+        // wrap.style.position = "absolute"
+        // wrap.style.right = "0"
 
         let bigWrap = document.createElement("span")
+        bigWrap.className = "cm-math-output-wrap"
         let spanBefore = document.createElement("span")
         // We need this spanBefore, as otherwise the cursor is shown at the right of the editor, instead of at the
         // end of the line (where it's supposed to be)
@@ -90,10 +89,6 @@ function mathOutputDecorations(view: EditorView) {
         //     }
         // })
 
-        console.log('view.state', view.state)
-        console.log('view.state.doc', view.state.doc)
-        console.log('view.state.doc.toString()', view.state.doc.toString())
-
         // let deco = Decoration.widget({
         //     widget: new MathOutputWidget(),
         //     side: 1
@@ -113,7 +108,6 @@ function mathOutputDecorations(view: EditorView) {
                 side: 1
             })
             scope = mathOutputWidget.resultingScope()
-            console.log('scope', scope)
             widgets.push(deco.range(lineEnd))
         }
     }
