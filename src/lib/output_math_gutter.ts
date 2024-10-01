@@ -41,8 +41,26 @@ const lineNumberMarkersThingy = lineNumberMarkers.compute(["selection"], state =
     let ranges = Array.from({length: totalLines}, (_, i) => i + 1);
     console.log('ranges', ranges)
 
+    let posAtLine = state.doc.line(1).from;
+
+    // This doesn't work, as it becomes cyclic (see also erorr when we uncomment this)
+    // let markerAtPos = state.facet(lineNumberMarkers);
+    // console.log('markerAtPos', markerAtPos)
+
+    // TODO !!!!
+    //  Here I need to continue -> it will work like this!
+    //  Here, we go through all ines and check if the line number is even or odd.
+    //  As we have all lines here, we can even store their scope at lines -> like this, we can calculate the mathjs stuff
+    //  One thing that we *then* still need, is to store the scope of each line with each marker. That we can do, but we'd
+    //  need to be able to retrieve the marker here first - is that possible?
+    //  ---
+    //  I don't think it is? See above the comment with the cyclic dependency...
+    //  --> Maybe we should use `state.update` instead?
+
     let rangesForSet = ranges.map((lineNumber) => {
         let posAtLine = state.doc.line(lineNumber).from;
+
+
         let lineNumberToPrint = 0;
         if (lineNumber % 2 == 0) {
             lineNumberToPrint = lineNumber;
@@ -101,7 +119,6 @@ export const myLineNumberGutter = mygutter({
     class: "cm-lineNumbers",
     renderEmptyElements: false,
     markers(view: EditorView) {
-        console.log("markers")
         let inputs = view.state.facet(lineNumberMarkers);
 
         return inputs;
