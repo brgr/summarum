@@ -1,6 +1,7 @@
-import {BlockInfo, BlockType, Direction, EditorView, ViewPlugin, ViewUpdate, WidgetType} from "@codemirror/view";
-import {gutterLineClass, GutterMarker, mygutter} from "./mygutter";
-import {combineConfig, EditorState, type Extension, Facet, RangeSet, StateEffect, StateField} from "@codemirror/state";
+import {BlockInfo, EditorView, ViewUpdate} from "@codemirror/view";
+import {GutterMarker, mygutter} from "./mygutter";
+import {combineConfig, EditorState, type Extension, Facet, RangeSet, StateField} from "@codemirror/state";
+import {mathjsEvaluate} from "./eval";
 
 type Handlers = { [event: string]: (view: EditorView, line: BlockInfo, event: Event) => boolean }
 
@@ -22,6 +23,45 @@ interface MathOutputConfig {
     /// Supply event handlers for DOM events on this gutter.
     domEventHandlers?: Handlers
 }
+
+let countDocChanges = StateField.define({
+    create() { return 0 },
+    update(value, tr) { return tr.docChanged ? value + 1 : value }
+})
+
+let mathOutputState = StateField.define({
+    create(): Record<number, string | undefined> {
+        return {
+            1: undefined
+        }
+    },
+
+    // This works now well! I can still optimize it a lot:
+    // 1. I can store the scope of each line, and update only from the edited line forward
+    // 2. I could even store where variables are kept, and only update these lines
+    // But for now, this is good enough!
+    update(value, tr) {
+        if (tr.docChanged) {
+            let newDoc = tr.newDoc;
+            let lines = newDoc.lines;
+
+            let resultValue: Record<number, string> = {}
+
+            let scope = {};
+
+            for (let i = 1; i <= lines; i++) {
+                let line = newDoc.line(i);
+                let lineText = line.text;
+                let result = mathjsEvaluate(lineText, scope);
+                resultValue[i] = result.result;
+            }
+
+            return resultValue;
+
+        }
+        return value;
+    }
+})
 
 /// Facet used to provide markers to the line number gutter.
 export const lineNumberMarkers = Facet.define<RangeSet<GutterMarker>>({
@@ -47,7 +87,7 @@ const lineNumberMarkersThingy = lineNumberMarkers.compute(["selection"], state =
     // let markerAtPos = state.facet(lineNumberMarkers);
     // console.log('markerAtPos', markerAtPos)
 
-    // TODO !!!!
+    // TODO !!!! <<<
     //  Here I need to continue -> it will work like this!
     //  Here, we go through all ines and check if the line number is even or odd.
     //  As we have all lines here, we can even store their scope at lines -> like this, we can calculate the mathjs stuff
@@ -118,26 +158,36 @@ function formatNumber(view: EditorView, number: number) {
 export const myLineNumberGutter = mygutter({
     class: "cm-lineNumbers",
     renderEmptyElements: false,
-    markers(view: EditorView) {
-        let inputs = view.state.facet(lineNumberMarkers);
-
-        return inputs;
-
-    },
+    // markers(view: EditorView) {
+    //     let inputs = view.state.facet(lineNumberMarkers);
+    //     return inputs;
+    //
+    // },
     lineMarker(view, line, others) {
-        // console.log("lineMarker")
-        // console.log('others', others)
-        if (others.some(m => m.toDOM)) return null
-        let actualLine = view.state.doc.lineAt(line.from);
-        let lineText = actualLine.text;
-        // console.log('lineText', lineText)
-        let number = formatNumber(view, -actualLine.number);
-        // console.log('number', number)
+        // // console.log("lineMarker")
+        // // console.log('others', others)
+        // if (others.some(m => m.toDOM)) return null
+        // let actualLine = view.state.doc.lineAt(line.from);
+        // let lineText = actualLine.text;
+        // // console.log('lineText', lineText)
+        // let number = formatNumber(view, -actualLine.number);
+        // // console.log('number', number)
+        //
+        // // lineNumberMarkers.
+        //
+        // return new NumberMarker(number)
+        // // return null
 
-        // lineNumberMarkers.
+        let mathOutputStateField = view.state.field(mathOutputState);
 
-        return new NumberMarker(number)
-        // return null
+        let lineNumber: number = view.state.doc.lineAt(line.from).number;
+
+
+        console.log('mathOutputStateField', mathOutputStateField)
+        console.log('lineNumber', lineNumber)
+        let outputNumber = mathOutputStateField[lineNumber] ?? "";
+        console.log('outputNumber', outputNumber)
+        return new NumberMarker(outputNumber)
     },
     widgetMarker: (view, widget, block) => {
         // TODO: I don't think we need this
@@ -167,9 +217,10 @@ export const myLineNumberGutter = mygutter({
 
 export function myLineNumbers(): Extension {
     return [
+        mathOutputState,
         myLineNumberGutter,
-        lineNumberConfig.of({formatNumber: number => number.toString()}),
-        lineNumberMarkersThingy
+        // lineNumberConfig.of({formatNumber: number => number.toString()}),
+        // lineNumberMarkersThingy
     ]
 }
 
