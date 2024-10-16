@@ -23,7 +23,7 @@
     import {highlightSelectionMatches, searchKeymap} from "@codemirror/search";
     import {lintKeymap} from "@codemirror/lint";
     import {example} from "./mathjs_lezer";
-    import {myLineNumbers} from "./output_math_gutter";
+    import {mathResults} from "./output_math_gutter";
 
     let editorDiv: HTMLDivElement;
 
@@ -43,7 +43,7 @@
                     // breakpointGutter,
                     // lineNumbers(),
                     // myLineNumberGutter,
-                    myLineNumbers(),
+                    mathResults(),
 
                     drawSelection(),
                     dropCursor(),
