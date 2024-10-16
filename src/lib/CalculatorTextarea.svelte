@@ -22,7 +22,6 @@
     import {autocompletion, closeBrackets, closeBracketsKeymap, completionKeymap} from "@codemirror/autocomplete";
     import {highlightSelectionMatches, searchKeymap} from "@codemirror/search";
     import {lintKeymap} from "@codemirror/lint";
-    import {mathOutputPlugin} from "./math_output_widget_decorator";
     import {example} from "./mathjs_lezer";
     import {myLineNumbers} from "./output_math_gutter";
 
@@ -66,8 +65,6 @@
                         ...completionKeymap,
                         ...lintKeymap
                     ]),
-
-                    mathOutputPlugin,
                 ],
                 // javascript()
                 example()
