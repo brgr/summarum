@@ -1,17 +1,7 @@
 import {EditorView, ViewUpdate} from "@codemirror/view";
-import {combineConfig, EditorState, type Extension, Facet, StateField} from "@codemirror/state";
+import {type Extension, StateField} from "@codemirror/state";
 import {mathjsEvaluate} from "./eval";
 import {GutterMarker, rightHandSideGutter} from "./right_hand_side_gutter";
-
-// TODO:
-// I'm at the point where I recreated my own line number markers in output_math_gutter.ts - now I need to change that to our needs!
-
-
-interface LineNumberConfig {
-    /// How to display line numbers. Defaults to simply converting them
-    /// to string.
-    formatNumber?: (lineNo: number, state: EditorState) => string
-}
 
 let mathOutputState = StateField.define({
     create(): Record<number, string | undefined> {
@@ -47,18 +37,6 @@ let mathOutputState = StateField.define({
     }
 })
 
-// A note on this: We need to define configs via this facet way. Tbh, I don't fully understand it and I'm not even sure
-// that we need it. But it was done like this for lineNumberConfig, so I will do it also like this for now.
-// What we basically do here is to just use our default config. I _think_ that a user could overwrite this config
-// if needed.
-const lineNumberConfig = Facet.define<LineNumberConfig, Required<LineNumberConfig>>({
-    combine(values) {
-        let defaults = {formatNumber: String};
-        return combineConfig<Required<LineNumberConfig>>(values, defaults, {})
-    }
-})
-
-
 class NumberMarker extends GutterMarker {
     constructor(readonly number: string) {
         super()
@@ -71,10 +49,6 @@ class NumberMarker extends GutterMarker {
     toDOM() {
         return document.createTextNode(this.number)
     }
-}
-
-function formatNumber(view: EditorView, number: number) {
-    return view.state.facet(lineNumberConfig).formatNumber(number, view.state)
 }
 
 export const myLineNumberGutter = rightHandSideGutter({
@@ -120,7 +94,6 @@ export const myLineNumberGutter = rightHandSideGutter({
         // }
         return null
     },
-    lineMarkerChange: update => update.startState.facet(lineNumberConfig) != update.state.facet(lineNumberConfig),
 
     // A quick explanation on the spacers, as I understand them now: They calculate the width of the gutter.
     // This is important if we have numbers with different amount of digits (1-9, 10-99, 100-999, ...). We will need
@@ -128,10 +101,10 @@ export const myLineNumberGutter = rightHandSideGutter({
     // we don't want the space to switch suddenly, but to be always the same!
     // This is why we calculate the maxLineNumber and then use it to calculate the width of the gutter.
     initialSpacer(view: EditorView) {
-        return new NumberMarker(formatNumber(view, maxLineNumber(view.state.doc.lines)))
+        return new NumberMarker(maxLineNumber(view.state.doc.lines).toString())
     },
     updateSpacer(spacer: GutterMarker, update: ViewUpdate) {
-        let max = formatNumber(update.view, maxLineNumber(update.view.state.doc.lines))
+        let max = maxLineNumber(update.view.state.doc.lines).toString()
         return max == (spacer as NumberMarker).number ? spacer : new NumberMarker(max)
     },
     // domEventHandlers: state.facet(lineNumberConfig).domEventHandlers
