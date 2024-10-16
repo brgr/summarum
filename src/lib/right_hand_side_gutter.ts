@@ -91,7 +91,7 @@ const activeGutters = Facet.define<Required<GutterConfig>>()
 
 /// Define an editor gutter. The order in which the gutters appear is
 /// determined by their extension priority.
-export function mygutter(config: GutterConfig): Extension {
+export function rightHandSideGutter(config: GutterConfig): Extension {
     return [gutters(), activeGutters.of({...defaults, ...config})]
 }
 

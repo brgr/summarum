@@ -1,7 +1,7 @@
-import {BlockInfo, EditorView, ViewUpdate} from "@codemirror/view";
-import {GutterMarker, mygutter} from "./mygutter";
-import {combineConfig, EditorState, type Extension, Facet, RangeSet, StateField} from "@codemirror/state";
+import {EditorView, ViewUpdate} from "@codemirror/view";
+import {combineConfig, EditorState, type Extension, Facet, StateField} from "@codemirror/state";
 import {mathjsEvaluate} from "./eval";
+import {GutterMarker, rightHandSideGutter} from "./right_hand_side_gutter";
 
 // TODO:
 // I'm at the point where I recreated my own line number markers in output_math_gutter.ts - now I need to change that to our needs!
@@ -47,20 +47,6 @@ let mathOutputState = StateField.define({
     }
 })
 
-/// Facet used to provide markers to the line number gutter.
-export const lineNumberMarkers = Facet.define<RangeSet<GutterMarker>>({
-    combine(input) {
-        // console.log("this input", input)
-        return input;
-    }
-})
-
-
-// Note: I don't think we need this
-/// Facet used to create markers in the line number gutter next to widgets.
-// export const lineNumberWidgetMarker = Facet.define<(view: EditorView, widget: WidgetType, block: BlockInfo) => GutterMarker | null>()
-
-
 // A note on this: We need to define configs via this facet way. Tbh, I don't fully understand it and I'm not even sure
 // that we need it. But it was done like this for lineNumberConfig, so I will do it also like this for now.
 // What we basically do here is to just use our default config. I _think_ that a user could overwrite this config
@@ -91,7 +77,7 @@ function formatNumber(view: EditorView, number: number) {
     return view.state.facet(lineNumberConfig).formatNumber(number, view.state)
 }
 
-export const myLineNumberGutter = mygutter({
+export const myLineNumberGutter = rightHandSideGutter({
     class: "cm-lineNumbers",
     renderEmptyElements: false,
     // markers(view: EditorView) {
@@ -155,8 +141,6 @@ export function myLineNumbers(): Extension {
     return [
         mathOutputState,
         myLineNumberGutter,
-        // lineNumberConfig.of({formatNumber: number => number.toString()}),
-        // lineNumberMarkersThingy
     ]
 }
 
