@@ -3,8 +3,6 @@ import {GutterMarker, mygutter} from "./mygutter";
 import {combineConfig, EditorState, type Extension, Facet, RangeSet, StateField} from "@codemirror/state";
 import {mathjsEvaluate} from "./eval";
 
-type Handlers = { [event: string]: (view: EditorView, line: BlockInfo, event: Event) => boolean }
-
 // TODO:
 // I'm at the point where I recreated my own line number markers in output_math_gutter.ts - now I need to change that to our needs!
 
@@ -14,20 +12,6 @@ interface LineNumberConfig {
     /// to string.
     formatNumber?: (lineNo: number, state: EditorState) => string
 }
-
-interface MathOutputConfig {
-    /// How to display line numbers. Defaults to simply converting them
-    /// to string.
-    formatResult?: (lineNumber: number, state: EditorState) => string
-    // TODO: Do we need the following?
-    /// Supply event handlers for DOM events on this gutter.
-    domEventHandlers?: Handlers
-}
-
-let countDocChanges = StateField.define({
-    create() { return 0 },
-    update(value, tr) { return tr.docChanged ? value + 1 : value }
-})
 
 let mathOutputState = StateField.define({
     create(): Record<number, string | undefined> {
@@ -71,54 +55,6 @@ export const lineNumberMarkers = Facet.define<RangeSet<GutterMarker>>({
     }
 })
 
-const lineNumberMarkersThingy = lineNumberMarkers.compute(["selection"], state => {
-    let linePos = state.doc.lineAt(state.selection.main.head).number
-    console.log('thing pos', linePos)
-
-    let totalLines = state.doc.lines;
-
-    // create array of numbers of size of totalLines
-    let ranges = Array.from({length: totalLines}, (_, i) => i + 1);
-    console.log('ranges', ranges)
-
-    let posAtLine = state.doc.line(1).from;
-
-    // This doesn't work, as it becomes cyclic (see also erorr when we uncomment this)
-    // let markerAtPos = state.facet(lineNumberMarkers);
-    // console.log('markerAtPos', markerAtPos)
-
-    // TODO !!!! <<<
-    //  Here I need to continue -> it will work like this!
-    //  Here, we go through all ines and check if the line number is even or odd.
-    //  As we have all lines here, we can even store their scope at lines -> like this, we can calculate the mathjs stuff
-    //  One thing that we *then* still need, is to store the scope of each line with each marker. That we can do, but we'd
-    //  need to be able to retrieve the marker here first - is that possible?
-    //  ---
-    //  I don't think it is? See above the comment with the cyclic dependency...
-    //  --> Maybe we should use `state.update` instead?
-
-    let rangesForSet = ranges.map((lineNumber) => {
-        let posAtLine = state.doc.line(lineNumber).from;
-
-
-        let lineNumberToPrint = 0;
-        if (lineNumber % 2 == 0) {
-            lineNumberToPrint = lineNumber;
-        }
-        return new NumberMarker(lineNumberToPrint.toString()).range(state.doc.lineAt(posAtLine).from)
-    });
-    console.log('ranges', rangesForSet)
-    let newRangeSet = RangeSet.of(
-        rangesForSet
-    );
-
-    console.log('newRangeSet', newRangeSet)
-
-    // TODO: I think now here we can recompute the mathjs stuff!
-    // But still.... where/how do we handle the SCOPE ???
-    // return RangeSet.of([new NumberMarker(linePos.toString()).range(state.doc.lineAt(0).from)])
-    return newRangeSet
-})
 
 // Note: I don't think we need this
 /// Facet used to create markers in the line number gutter next to widgets.
