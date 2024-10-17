@@ -35,14 +35,7 @@
                     EditorView.lineWrapping,
                     highlightSpecialChars(),
                     history(),
-                    // foldGutter(),
-                    // gutter({class: "cm-right_hand_side_gutter"}),
-                    // right_hand_side_gutter({class: "cm-right_hand_side_gutter"}),
-                    // myEmptyLineGutter,
-                    // mathOutputGutter,
-                    // breakpointGutter,
-                    // lineNumbers(),
-                    // myLineNumberGutter,
+
                     mathResults(),
 
                     drawSelection(),
