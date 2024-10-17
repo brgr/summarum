@@ -22,7 +22,7 @@
     import {autocompletion, closeBrackets, closeBracketsKeymap, completionKeymap} from "@codemirror/autocomplete";
     import {highlightSelectionMatches, searchKeymap} from "@codemirror/search";
     import {lintKeymap} from "@codemirror/lint";
-    import {example} from "./mathjs_lezer";
+    import {mathjsLanguage} from "./mathjs_lezer";
     import {mathResults} from "./output_math_gutter";
 
     let editorDiv: HTMLDivElement;
@@ -60,8 +60,8 @@
                         ...lintKeymap
                     ]),
                 ],
-                // javascript()
-                example()
+
+                mathjsLanguage()
             ],
             parent: editorDiv
         });

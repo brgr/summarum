@@ -47,7 +47,7 @@ export const exampleLanguage = LRLanguage.define({
 
 import {LanguageSupport} from "@codemirror/language"
 
-export function example() {
+export function mathjsLanguage() {
     return new LanguageSupport(
         exampleLanguage,
         // [exampleCompletion]
