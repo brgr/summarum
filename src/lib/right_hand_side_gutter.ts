@@ -1,3 +1,19 @@
+/**
+ * This file here is basically the following file:
+ * https://github.com/codemirror/view/blob/49e68f7cbe0440501fa666c600639fe281109d90/src/gutter.ts
+ *
+ * With two changes:
+ *
+ * 1. The gutter is put on the right hand side of the editor. For this, simply the line 150 is changed to put it after
+ *    the editor instead of before.
+ * 2. Multiple functions in the end, that would normally define extensions like the line number extension etc.,
+ *    are removed, as they are already defined in the original gutter.ts file.
+ *
+ * Note that we had to re-add the whole gutter file to achieve putting it on the right hand side - I did not see
+ * an easier/simpler way to do this.
+ * I got the idea to create a new plugin for this from this discussion:
+ * https://discuss.codemirror.net/t/is-it-possible-to-style-custom-gutter-on-right-side/3776.
+ */
 import {type Extension, Facet, MapMode, type RangeCursor, RangeSet, RangeValue} from "@codemirror/state"
 import {BlockInfo, BlockType, Direction, EditorView, ViewPlugin, ViewUpdate, WidgetType} from "@codemirror/view"
 
@@ -137,9 +153,8 @@ const gutterView = ViewPlugin.fromClass(class {
             this.dom.style.position = "sticky"
         }
         this.syncGutters(false)
-        // TODO: Correct?
+        // Insert after instead of before, to put the gutter at the right hand side.
         // view.scrollDOM.insertBefore(this.dom, view.contentDOM)
-        // insert after instead of before
         view.scrollDOM.appendChild(this.dom)
     }
 

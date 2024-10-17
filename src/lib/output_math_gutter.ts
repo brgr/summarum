@@ -63,7 +63,7 @@ class NumberMarker extends GutterMarker {
 export const mathResultsGutter = rightHandSideGutter({
     class: "cm-mathResults",
     renderEmptyElements: false,
-    lineMarker(view, line, others) {
+    lineMarker(view, line, _others) {
         let mathOutputStateField = view.state.field(mathResultsState);
         let lineNumber: number = view.state.doc.lineAt(line.from).number;
         let outputNumber = mathOutputStateField[lineNumber] ?? "";
