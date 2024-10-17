@@ -4,14 +4,14 @@
     font-weight: 400;
     font-size: 1.2em;
 
-    color-scheme: light dark;
-    color: rgba(255, 255, 255, 0.87);
-    background-color: #242424;
-
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
 }
 
 a {
@@ -103,39 +103,41 @@ button:focus-visible {
     font-weight: 400;
     font-size: 1.2em;
 
-    /*color-scheme: light dark;*/
-    /*color: rgba(255, 255, 255, 0.87);*/
-    /*background-color: #242424;*/
-
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
-/*.cm-line {*/
-/*    display: flex;*/
-/*}*/
-
-/*.cm-math-output-wrap {*/
-/*    min-width: 50px; !* Ensure the last item is at least 200px wide *!*/
-/*    max-width: 100%; !* Ensure the last item does not exceed the width of the container *!*/
-/*    flex-shrink: 1; !* Allow the last item to shrink if the container is smaller *!*/
-/*    margin-left: auto; !* Push the last item to the right *!*/
-/*}*/
-
-.cm-mygutter {
-    min-width: 30px; /* Ensure the last item is at least 200px wide */
-    background-color: red;
+.cm-cursor {
+    border-left: 1.2px solid white !important;
 }
 
-.cm-math-output {
+.cm-math-output, .cm-mathResults {
     background-color: #242424;
 }
 
 @media (prefers-color-scheme: light) {
-    .cm-editor {
+    .cm-editor, .cm-mathResults {
         color: #213547;
         background-color: #ffffff;
     }
+}
+
+.cm-gutters {
+    border-right: 0 !important;
+}
+
+.cm-mathResults {
+    color: #535bf2;
+
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.8;
+    font-weight: 500;
+    font-size: 1.2em;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
