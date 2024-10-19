@@ -10,6 +10,9 @@ tauri-dev:
 test-all:
     npm run test:all
 
+test-playwright:
+    npm run test:playwright
+
 # This was tested on Manjaro Gnome, though it should work always on Gnome.
 build-and-deploy-locally:
     npm run tauri build
