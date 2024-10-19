@@ -69,6 +69,10 @@
         // At the start of the app, we want to have the editor focused directly
         editor.focus();
     })
+
+    export function focus() {
+        editorDiv.focus();
+    }
 </script>
 
 

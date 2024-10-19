@@ -1,11 +1,18 @@
 <script lang="ts">
-    import Counter from './lib/CalculatorTextarea.svelte'
+    import CalculatorTextarea from "./lib/CalculatorTextarea.svelte";
+
+    let calculatorTextarea: CalculatorTextarea;
+
+    // on focus, give focus to CalculatorTextarea
+    window.addEventListener('focus', () => {
+        calculatorTextarea.focus();
+    })
 </script>
 
 <main>
 
     <div class="card">
-        <Counter/>
+        <CalculatorTextarea bind:this={calculatorTextarea} />
     </div>
 
 </main>

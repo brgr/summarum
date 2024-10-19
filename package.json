@@ -19,7 +19,7 @@
     "@lezer/generator": "^1.7.1",
     "@playwright/test": "^1.46.1",
     "@sveltejs/vite-plugin-svelte": "^3.0.1",
-    "@tauri-apps/cli": "^1.6.1",
+    "@tauri-apps/cli": "^2.0.3",
     "@tsconfig/svelte": "^5.0.2",
     "@types/node": "^22.5.4",
     "jsdom": "^25.0.0",
