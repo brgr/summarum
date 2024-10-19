@@ -1,4 +1,4 @@
-name: Runs frontend tests
+name: Run vitest
 
 on:
   push:
@@ -23,5 +23,7 @@ jobs:
           cache: 'npm'
       - name: Install dependencies
         run: npm install
+      - name: Generate parser code
+        run: npm run prepare-grammar
       - name: Run tests
         run: npm run test
