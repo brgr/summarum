@@ -77,6 +77,10 @@ button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
 }
 
+.cm-cursor {
+    border-left: 1.2px solid white !important;
+}
+
 @media (prefers-color-scheme: light) {
     :root {
         color: #213547;
@@ -89,6 +93,10 @@ button:focus-visible {
 
     button {
         background-color: #f9f9f9;
+    }
+
+    .cm-cursor {
+        border-left: 1.2px solid black !important;
     }
 }
 
@@ -109,9 +117,6 @@ button:focus-visible {
     -moz-osx-font-smoothing: grayscale;
 }
 
-.cm-cursor {
-    border-left: 1.2px solid white !important;
-}
 
 .cm-math-output, .cm-mathResults {
     background-color: #242424;
