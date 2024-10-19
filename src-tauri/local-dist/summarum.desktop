@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=summarum
+Comment=Write math expressions and get the result.
+Exec=/home/dominik/.local/bin/summarum
+Icon=/home/dominik/.local/share/summarum/icon.png
+Terminal=false
+Type=Application
+Categories=Education;Science;Math;Utility;
