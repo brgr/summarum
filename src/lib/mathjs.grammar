@@ -4,6 +4,6 @@
 
 @tokens {
   space { @whitespace+ }
-  SomethingElse { $[A-Za-z^=\-_\(\)*&%$€@/\[\]]+ }
+  SomethingElse { $[A-Za-z^=\-_\(\)*&%$€@/\[\]\+]+ }
   Number { $[0-9]+ }
 }

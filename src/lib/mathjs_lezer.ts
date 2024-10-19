@@ -25,7 +25,7 @@ let parserWithMetadata = parser.configure({
 })
 
 
-export const exampleLanguage = LRLanguage.define({
+export const mathjsLanguage = LRLanguage.define({
     parser: parserWithMetadata,
     languageData: {
         // commentTokens: {line: ";"}
@@ -47,9 +47,9 @@ export const exampleLanguage = LRLanguage.define({
 
 import {LanguageSupport} from "@codemirror/language"
 
-export function mathjsLanguage() {
+export function mathjsLanguageSupport() {
     return new LanguageSupport(
-        exampleLanguage,
+        mathjsLanguage,
         // [exampleCompletion]
     )
 }
