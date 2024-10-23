@@ -5,8 +5,8 @@ on:
   # TODO: Change this to actually only run when we create a tag.
   #  See: https://stackoverflow.com/questions/61891328/trigger-github-action-only-on-new-tags
   push:
-    branches:
-      - main
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   publish-tauri:
