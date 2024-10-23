@@ -12,6 +12,7 @@
     "copyright": "",
     "targets": [
       "deb",
+      "appimage",
       "nsis",
       "msi",
       "app",
