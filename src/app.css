@@ -37,23 +37,11 @@ h1 {
     line-height: 1.1;
 }
 
-.card {
-    padding: 2em;
-}
-
 #app {
     max-width: 56rem;
     width: 100%;
     margin: 0 auto;
-    padding: 1rem;
-    /*padding: 2rem;*/
-    /*text-align: center;*/
-}
-
-@media (max-width: 768px) {
-    #app {
-        padding: 1rem .4rem;
-    }
+    padding: 1rem 1.3rem;
 }
 
 button {
@@ -70,11 +58,6 @@ button {
 
 button:hover {
     border-color: #646cff;
-}
-
-button:focus,
-button:focus-visible {
-    outline: 4px auto -webkit-focus-ring-color;
 }
 
 .cm-cursor {
@@ -147,4 +130,8 @@ button:focus-visible {
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+.cm-focused {
+    outline: none !important;
 }
