@@ -33,7 +33,16 @@ jobs:
         if: matrix.platform == 'ubuntu-22.04' # This must match the platform value defined above.
         run: |
           sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+          sudo apt install -y \
+            libwebkit2gtk-4.0-37=2.36.0-2ubuntu1 \
+            libwebkit2gtk-4.0-dev=2.36.0-2ubuntu1 \
+            libappindicator3-dev \
+            libjavascriptcoregtk-4.0-18=2.36.0-2ubuntu1 \
+            libjavascriptcoregtk-4.0-dev=2.36.0-2ubuntu1 \
+            gir1.2-javascriptcoregtk-4.0=2.36.0-2ubuntu1 \
+            gir1.2-webkit2-4.0=2.36.0-2ubuntu1 \
+            librsvg2-dev \
+            patchelf
 
       - name: setup node
         uses: actions/setup-node@v4
@@ -63,8 +72,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
-          releaseName: 'App v__VERSION__'
+          tagName: v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
+          releaseName: 'v__VERSION__'
           releaseBody: 'See the assets to download this version and install.'
           releaseDraft: true
           prerelease: false
