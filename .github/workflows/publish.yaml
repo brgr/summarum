@@ -2,8 +2,6 @@ name: 'publish'
 
 on:
   workflow_dispatch:
-  # TODO: Change this to actually only run when we create a tag.
-  #  See: https://stackoverflow.com/questions/61891328/trigger-github-action-only-on-new-tags
   push:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+'
@@ -77,3 +75,10 @@ jobs:
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.platform }}-artifacts
+          path: |
+            ./src-tauri/target/release/bundle/
