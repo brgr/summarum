@@ -14,20 +14,21 @@
     "test:all": "npm run test && npm run test:playwright",
     "test:watch": "vitest --watch",
     "tauri": "tauri",
-    "prepare-grammar": "lezer-generator src/lib/mathjs.grammar -o src/lib/parser.js"
+    "prepare-grammar": "lezer-generator src/lib/mathjs.grammar -o src/lib/parser.js",
+    "check-updates": "npx npm-check-updates"
   },
 
   "devDependencies": {
     "@lezer/generator": "^1.7.1",
-    "@playwright/test": "^1.46.1",
+    "@playwright/test": "^1.49.0",
     "@sveltejs/vite-plugin-svelte": "^3.0.1",
     "@tauri-apps/cli": "^2.1.0",
-    "@tsconfig/svelte": "^5.0.2",
-    "@types/node": "^22.5.4",
+    "@tsconfig/svelte": "^5.0.4",
+    "@types/node": "^22.9.3",
     "svelte": "^4.2.8",
     "svelte-check": "^4.1.0",
-    "tslib": "^2.6.2",
-    "typescript": "^5.5.4",
+    "tslib": "^2.8.1",
+    "typescript": "^5.7.2",
     "vite": "5.4.11",
     "vitest": "^2.1.5"
   },
