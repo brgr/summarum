@@ -1,8 +1,9 @@
 {
-  "name": "svelte-math-editor",
+  "name": "summarum",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.2",
   "type": "module",
+
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -15,6 +16,7 @@
     "tauri": "tauri",
     "prepare-grammar": "lezer-generator src/lib/mathjs.grammar -o src/lib/parser.js"
   },
+
   "devDependencies": {
     "@lezer/generator": "^1.7.1",
     "@playwright/test": "^1.46.1",

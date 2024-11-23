@@ -1,11 +1,11 @@
 [package]
-name = "app"
-version = "0.1.1"
-description = "A Tauri App"
-authors = ["you"]
+name = "summarum"
+version = "0.1.2"
+description = "A math notepad calculator."
+authors = ["Dominik Berger"]
 license = ""
 repository = ""
-default-run = "app"
+default-run = "summarum"
 edition = "2021"
 rust-version = "1.60"
 
